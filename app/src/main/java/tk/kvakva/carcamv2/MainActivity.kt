@@ -1,11 +1,13 @@
 package tk.kvakva.carcamv2
 
 import android.app.Application
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     LOG_TAG,
                     "************************ onVideoTaken ************** filename: ${fileN.name}  ----------"
                 )
-                txtView.text=fileN.name
+                txtView.text = fileN.name
                 if (camViewModel.isRecordingVideo.value == true) {
                     camViewModel.setTimeOutRec()
                 }
@@ -69,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             override fun onCameraOpened(options: CameraOptions) {
                 super.onCameraOpened(options)
                 Log.v(LOG_TAG, "^^^^ onCameraOOpend ^^^^")
-                if(camViewModel.isRecordingVideo.value==true)
+                if (camViewModel.isRecordingVideo.value == true)
                     startRecord()
             }
 
@@ -90,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         camViewModel.timeOutRec.observe(this, mObserver)
 
     }
-
 
 
     fun onClickRec(view: View) {
@@ -120,11 +121,87 @@ class MainActivity : AppCompatActivity() {
             SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSS", Locale.US).format(Date())
         }
 
+/*
+        val resolver = contentResolver
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "CuteKitten001")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/PerracoLabs")
+        }
+
+        val uri  = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        resolver.openOutputStream(uri!!).use {
+
+        }
+ private fun getVideoFilePath(context: Context?): String {
+        val filename = "${System.currentTimeMillis()}.mp4"
+        val dir = context?.getExternalFilesDirs("CarCamVideos")?.last()
+        val listFiles = dir?.listFiles { file, s ->
+            s.endsWith("mp4",true)
+        }
+        if (listFiles != null) {
+            if(listFiles.size>=20){
+                for(i in 0..listFiles.size-20){
+                    listFiles.sorted()[i].delete()
+                }
+            }
+        }
+
+        listFiles?.forEach {
+            Log.i("asdfasdfasdf","!!!! $it")
+        }
+        val freeBytes = File(dir?.absolutePath).freeSpace
+        Log.i("asdfasdf","!!!!!!!!!!!!!!!!!!!!!!!!!!! ${dir?.absolutePath} ${freeBytes} ////////")
+        val extDirs = context?.getExternalFilesDirs("qqww")
+        extDirs?.forEach {
+            Log.i("ASDASDASD","!!!!!!!!!!!!!!!!!!!!!!!!!!!! ${it.absolutePath} ${File(it.absolutePath).freeSpace} !!!! ")
+        }
+        val diri = context?.filesDir
+        Log.i("ASDASD","!!!!!!!!!!!!!!!! ${diri?.absolutePath} ${File(diri?.absolutePath).freeSpace}")
+        return if (dir == null) {
+            filename
+        } else {
+            "${dir.absolutePath}/$filename"
+        }
+    }
+
+*/
+
+/*
+        val fff = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),"yui.jpg")
+
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+        val listFiles = dir?.listFiles { file, s ->
+            s.endsWith("mp4",true)
+        }
+*/
+
+
+/*
+        val resolver = contentResolver
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "CuteKitten001")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/PerracoLabs")
+        }
+
+        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+
+
+        resolver.openOutputStream(uri!!).use {
+            // TODO something with the stream
+        }
+
+*/
+
+
         val f = File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "$sTime.mp4")
         if (camV.isTakingVideo)
             Log.e(LOG_TAG, "!!!!!! startRecord() !!! camV.isTakeingVideo!!!!!!")
         else
-            camV.takeVideo(f, camViewModel.duration.value?:300000)
+            camV.takeVideo(f, camViewModel.duration.value ?: 300000)
         camViewModel.startVideo()
         videoRecordBtn.setImageResource(android.R.drawable.star_on)
         Log.v(LOG_TAG, "********* startRecord() f: ${f.name} *****************")
@@ -142,13 +219,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menuopt,menu)
+        menuInflater.inflate(R.menu.menuopt, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     fun onClickMenu(item: MenuItem) {
-        when(item.itemId){
-            R.id.optionsid -> startActivity(Intent(this,SettingsActivity::class.java))
+        when (item.itemId) {
+            R.id.optionsid -> startActivity(Intent(this, SettingsActivity::class.java))
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -174,9 +251,9 @@ class CamViewModel(aplica: Application) : AndroidViewModel(aplica) {
 
     init {
         val sp = PreferenceManager.getDefaultSharedPreferences(getApplication())
-        Log.i("Preper","All Prefferences ${sp.all}")
-        _duration.value=( sp.getString("timeOutKey","5")?.toInt()?: 5 ) * 60000
-        Log.v("init","                              duration = ${duration.value}")
+        Log.i("Preper", "All Prefferences ${sp.all}")
+        _duration.value = (sp.getString("timeOutKey", "5")?.toInt() ?: 5) * 60000
+        Log.v("init", "                              duration = ${duration.value}")
         Log.v(
             "InitCamViewModel",
             "!!!!!!!!!!!!!!!!!!!!!!!!!!! view model init !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
