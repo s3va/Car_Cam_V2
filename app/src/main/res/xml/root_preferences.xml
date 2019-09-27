@@ -24,4 +24,18 @@
         app:title="Duration of record in minutes"
         app:useSimpleSummaryProvider="true" />
 
+    <EditTextPreference
+        android:defaultValue="1000000000"
+        android:icon="@android:drawable/ic_menu_save"
+        app:key="minFreeSpace"
+        app:title="minimun bytes free before delete old videos"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        android:defaultValue="1000"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:key="maxNumberOfVideos"
+        app:title="maximun number video files"
+        app:useSimpleSummaryProvider="true" />
+
 </PreferenceScreen>
