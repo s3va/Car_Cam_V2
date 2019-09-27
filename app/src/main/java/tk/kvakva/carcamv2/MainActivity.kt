@@ -350,9 +350,9 @@ class CamViewModel(aplica: Application) : AndroidViewModel(aplica) {
     private val _textViewText = MutableLiveData<String>("wawaawawaw awawawaw")
     val textViewText: LiveData<String> = _textViewText
 
-    fun setViewText(s: String) {
-        _textViewText.postValue(s)
-    }
+  //  fun setViewText(s: String) {
+  //      _textViewText.postValue(s)
+  //  }
 
     fun appViewText(s: String) {
         _textViewText.postValue((textViewText.value + s).takeLast(350))
